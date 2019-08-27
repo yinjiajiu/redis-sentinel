@@ -1,0 +1,44 @@
+version: '3.4'
+services:
+  master:
+    image: redis:4-alpine
+    container_name: redis-master
+    restart: always
+    command: redis-server --port 6379 --requirepass 1234
+#    command: redis-server /etc/redis/master.conf
+    network_mode: "host"
+    ports:
+      - 6379:6379
+    volumes:
+#      - ./data/data6379:/data
+#      - ./conf/master.conf:/etc/redis/master.conf
+      - ./log:/var/redis/log
+
+  slave1:
+    image: redis:4-alpine
+    container_name: redis-slave-1
+    restart: always
+    command: redis-server --slaveof 127.0.0.1 6379 --port 6380 --requirepass 1234 --masterauth 1234
+#    command: redis-server /etc/redis/slave1.conf
+    network_mode: "host"
+    ports:
+      - 6380:6380
+    volumes:
+#      - ./data/data6380:/data
+#      - ./conf/slave1.conf:/etc/redis/slave1.conf
+      - ./log:/var/redis/log
+
+
+  slave2:
+    image: redis:4-alpine
+    container_name: redis-slave-2
+    restart: always
+    command: redis-server --slaveof 127.0.0.1 6379 --port 6381 --requirepass 1234 --masterauth 1234
+#    command: redis-server /etc/redis/slave2.conf
+    network_mode: "host"
+    ports:
+      - 6381:6381
+    volumes:
+#      - ./data/data6381:/data
+#      - ./conf/slave2.conf:/etc/redis/slave2.conf
+      - ./log:/var/redis/log
